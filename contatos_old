@@ -1,0 +1,50 @@
+ var = contatos [
+	{
+	   "nome": "Fernando", 
+	   "telefone": "99999-8888",
+	   "data": "2016-06-12-12T12e46.204z", 
+	   "operadora":{
+	   	    "nome": "Vivo", 
+	   	    "codigo": 15, 
+	   	    "categoria": "Celular"
+	   	}, 
+	   	"cor": "blue"
+	},
+	{
+		"nome": "Nancy", 
+		"telefone": "88888-7777", 
+		"data": "2016-06-12-12T12e46.204z", 
+		"operadora":{
+				"nome": "Vivo", 
+				"codigo": 15, 
+				"categoria": "Celular"
+		}, 
+		"cor": "green"
+	},
+	{
+		"nome": "Elise", 
+		"telefone": "3333-4444", 
+		"data": "2016-06-12-12T12e46.204z", 
+		"operadora":{
+		        "nome": "Vivo", 
+		        "codigo": 15, 
+				"categoria": "Celular"
+		}, 
+		"cor": "yellow"
+	},
+	{
+		"nome": "Cibele",
+		"telefone": "98765-4321",
+		"data": "2016-06-12-12T12e46.204z",
+		"operadora": {
+				"nome": "Vivo",
+				"codigo": 15, 
+				"categoria": "Celular"
+		}, 
+		"cor": "red"
+	}
+]
+
+app.get('/contatos', function(req, res) {
+  res.json(contatos);
+});

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html ng-app="listaTelefonica">
+<head>
+	<meta charset="utf-8">
+	<title>Lista Telefonica</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/lib/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="assets/css/custom.css"/>
+	<script type="text/javascript" src="assets/js/lib/angular.min.js"></script>
+	<script type="text/javascript" src="assets/js/lib/angular-locale_pt-br.js"></script>
+	<script type="text/javascript" src="assets/js/lib/angular-messages.min.js"></script>
+	<script type="text/javascript" src="assets/js/app.js"></script>
+	<script type="text/javascript" src="assets/js/controllers/listaTelefonicaCtrl.js"></script>
+	<script type="text/javascript" src="assets/js/services/contatosAPIServices.js"></script>
+	<script type="text/javascript" src="assets/js/services/operadorasAPIServices.js"></script>
+	<script type="text/javascript" src="assets/js/services/serialGeneratorServices.js"></script>
+	<script type="text/javascript" src="assets/js/config/serialGeneratorConfig.js"></script>
+	<script type="text/javascript" src="assets/js/config/configValue.js"></script>
+	<script type="text/javascript" src="assets/js/filters/nameFilter.js"></script>
+	<script type="text/javascript" src="assets/js/filters/ellipsisFilter.js"></script>
+
+
+	
+</head>
+<body ng-controller="listaTelefonicaCtrl">
+	<div class="jumbotron">
+		<h3>{{app}}</h3>
+
+		{{message}}
+
+		<input type="text"  class="form-control" name="busca" ng-model="criterioDeBusca" placeholder="O que você está buscando?"/> 	
+		<table class="table" ng-show="contatos.length > 0">
+			<tr>
+				<th></th>
+				<th><a href="" ng-click="ordenarPor('nome')">Nome</a></th>
+				<th><a href="" ng-click="ordenarPor('telefone')">Telefone</a></th>
+				<th>Operadora</th>
+				<th>Data</th>
+				<th></th>
+			</tr>
+			<tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:criterioDeBusca | orderBy:criterioDeOrdenacao:direcaoDaOrdenacao">
+				<td><input type="checkbox" ng-model="contato.selecionado"/></td>
+				<td>{{contato.nome | name | ellipsis}}</td>
+				<td>{{contato.telefone}}</td>
+				<td>{{contato.operadora.nome | lowercase}}</td>
+				<td>{{contato.data | date: "dd/MM/yyyy HH:mm"}}</td>
+				<td><div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div></td>
+			</tr>
+		</table>
+
+		<hr/>
+		
+		<form name="contatoForm">		
+			<input type="text" class="form-control" ng-model="contato.nome" name="nome" placeholder="Nome" ng-required="true" ng-minlength="10" />
+			<input type="text" class="form-control" ng-model="contato.telefone"  name="telefone" placeholder="Telefone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/"/>
+			<select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome + ' (' + (operadora.preco | currency) + ')' for operadora in operadoras | orderBy:'nome'">
+				<option value="">Escolha uma operadora</option>
+			</select>
+		</form>
+
+		<div ng-show="contatoForm.nome.$dirty" ng-messages="contatoForm.nome.$error">	
+			<div ng-message="required" class="alert alert-danger" >	
+				Por favor preencha o Nome 	
+			</div>
+			<div ng-message="minlength" class="alert alert-danger">	
+				O Campo nome deve ter no minimo 10 caracteres 	
+			</div>
+		</div>
+		<div ng-show="contatoForm.telefone.$error.required && contatoForm.telefone.$dirty" class="alert alert-danger">	
+			Por favor preencha o Telefone	
+		</div>
+		<div ng-show="contatoForm.telefone.$error.pattern" class="alert alert-danger">	
+			O Campo Telefone deve ter o formato 99999-9999	
+		</div>
+		<button class="btn btn-primary btn-block" ng-disabled="contatoForm.$invalid" ng-click="adicionarContato(contato)">Adicionar Contato</button>	
+		<button class="btn btn-danger btn-block" ng-click="apagarContatos(contatos)" ng-if="		isContatoSelecionado(contatos)">Apagar Contatos</button>
+		
+	</div>
+	<div ng-include="'view/footer.html'"></div>
+</body>
+</html>
